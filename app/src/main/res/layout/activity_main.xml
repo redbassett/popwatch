@@ -9,8 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.redbassett.popwatch.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/poster_gird"
+        android:numColumns="2"
+        android:verticalSpacing="0dp"
+        android:horizontalSpacing="0dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center" />
 </RelativeLayout>
