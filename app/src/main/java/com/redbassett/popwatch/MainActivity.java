@@ -69,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
         new FetchPopularMoviesTask().execute();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        updatePopularMovies();
+    }
+
     /**
      * The FetchPopularMoviesTask class connects to the API from The Movie Database asynchronously
      * so as to avoid blocking the UI thread.
