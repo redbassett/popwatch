@@ -12,7 +12,7 @@ public class Movie {
     protected int id;
     protected String posterUrl;
 
-    private final String LOG_TAG = Movie.class.getSimpleName();
+    private static final String LOG_TAG = Movie.class.getSimpleName();
 
     public Movie() {
         this.id = 0;

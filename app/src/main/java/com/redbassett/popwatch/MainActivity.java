@@ -29,6 +29,12 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
+    /**
+     * LOG_TAG provides a constant to pass to Log methods indicating the class that the log
+     * message was generated in.
+     */
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     // The adapter that handles the image URLS for the posters
     private MovieArrayAdapter mPosterAdapter;
 
@@ -88,11 +94,6 @@ public class MainActivity extends AppCompatActivity {
      * so as to avoid blocking the UI thread.
      */
     public class FetchPopularMoviesTask extends AsyncTask<Void, Void, Movie[]> {
-        /**
-         * LOG_TAG provides a constant to pass to Log methods indicating the class that the log
-         * message was generated in.
-         */
-        private final String LOG_TAG = FetchPopularMoviesTask.class.getSimpleName();
 
         /**
          * doInBackground is overridden from AsyncTask and handles the query in a background thread.
