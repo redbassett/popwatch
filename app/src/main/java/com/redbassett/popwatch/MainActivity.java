@@ -1,8 +1,11 @@
 package com.redbassett.popwatch;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -62,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -103,11 +111,16 @@ public class MainActivity extends AppCompatActivity {
                 final String BASE_URI = "http://api.themoviedb.org/3";
                 final String MOVIE_URI = "movie";
                 final String POPULAR_URI = "popular";
+                final String TOP_URI = "top_rated";
                 final String API_KEY_PARAM = "api_key";
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                String sortPref = prefs.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_popular));
+                String typeUri = (sortPref.equals("top")) ? TOP_URI : POPULAR_URI;
 
                 Uri builtUri = Uri.parse(BASE_URI).buildUpon()
                         .appendPath(MOVIE_URI)
-                        .appendPath(POPULAR_URI)
+                        .appendPath(typeUri)
                         .appendQueryParameter(API_KEY_PARAM, BuildConfig.THE_MOVIE_DATABASE_API_KEY)
                         .build();
 
