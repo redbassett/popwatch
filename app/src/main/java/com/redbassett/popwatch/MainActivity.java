@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updatePopularMovies() {
-        new FetchPopularMoviesTask().execute();
+        new FetchMovieFeedTask().execute();
     }
 
     @Override
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
      * The FetchPopularMoviesTask class connects to the API from The Movie Database asynchronously
      * so as to avoid blocking the UI thread.
      */
-    public class FetchPopularMoviesTask extends AsyncTask<Void, Void, Movie[]> {
+    public class FetchMovieFeedTask extends AsyncTask<Void, Void, Movie[]> {
 
         /**
          * doInBackground is overridden from AsyncTask and handles the query in a background thread.
