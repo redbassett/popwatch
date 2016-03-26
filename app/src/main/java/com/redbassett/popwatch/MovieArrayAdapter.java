@@ -1,6 +1,7 @@
 package com.redbassett.popwatch;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,16 +14,19 @@ import java.util.ArrayList;
 /**
  * Created by harry on 3/25/16.
  */
-public class ImageArrayAdapter extends ArrayAdapter<String> {
+public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     private Context mContext;
 
-    public ImageArrayAdapter(Context c, int r, ArrayList<String> t) {
+    public MovieArrayAdapter(Context c, int r, ArrayList<Movie> t) {
         super(c, r, t);
         mContext = c;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        String path = getItem(position);
+        final String TMDB_IMG_ROOT = "http://image.tmdb.org/t/p/";
+        final String TMDB_IMG_SIZE_PATH = "w185";
+
+        String path = getItem(position).getPosterUrl();
         ImageView imageView;
 
         if (convertView == null) {
@@ -32,7 +36,17 @@ public class ImageArrayAdapter extends ArrayAdapter<String> {
             imageView = (ImageView) convertView;
         }
 
-        Picasso.with(mContext).load(path).into(imageView);
+        String posterURL = Uri.parse(TMDB_IMG_ROOT).buildUpon()
+                .appendPath(TMDB_IMG_SIZE_PATH)
+                .appendPath(path)
+                .build().toString();
+
+        Picasso.with(mContext).load(posterURL).into(imageView);
         return imageView;
+    }
+
+    @Override
+    public void addAll(Movie[] results) {
+        super.addAll(results);
     }
 }

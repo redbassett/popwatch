@@ -30,14 +30,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     // The adapter that handles the image URLS for the posters
-    private ImageArrayAdapter mPosterAdapter;
+    private MovieArrayAdapter mPosterAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPosterAdapter = new ImageArrayAdapter(this, R.layout.activity_main, new ArrayList<String>());
+        mPosterAdapter = new MovieArrayAdapter(this, R.layout.activity_main, new ArrayList<Movie>());
 
         GridView posterGrid = (GridView) findViewById(R.id.poster_gird);
         posterGrid.setAdapter(mPosterAdapter);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
      * The FetchPopularMoviesTask class connects to the API from The Movie Database asynchronously
      * so as to avoid blocking the UI thread.
      */
-    public class FetchPopularMoviesTask extends AsyncTask<Void, Void, String[]> {
+    public class FetchPopularMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         /**
          * LOG_TAG provides a constant to pass to Log methods indicating the class that the log
          * message was generated in.
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
          * @return String[] of movie poster URLs.
          */
         @Override
-        protected String[] doInBackground(Void... params) {
+        protected Movie[] doInBackground(Void... params) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
@@ -188,47 +188,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String[] result) {
-            if (result != null) {
+        protected void onPostExecute(Movie[] results) {
+            if (results != null) {
                 mPosterAdapter.clear();
                 // Unlike the Sunshine app example, the min SDK is 15, and addAll requires 11 and
                 // above, so no for loops for us here
-                mPosterAdapter.addAll(result);
+                mPosterAdapter.addAll(results);
             }
         }
 
-        private String[] getMoviesFromJson(String jsonStr) throws JSONException {
+        private Movie[] getMoviesFromJson(String jsonStr) throws JSONException {
             final String TMDB_RESULTS = "results";
-            final String TMDB_POSTER_PATH = "poster_path";
-
-            final String TMDB_IMG_ROOT = "http://image.tmdb.org/t/p/";
-            final String TMDB_IMG_SIZE_PATH = "w185";
 
             JSONObject resultJson = new JSONObject(jsonStr);
             JSONArray moviesJson = resultJson.getJSONArray(TMDB_RESULTS);
             int len = moviesJson.length();
 
-            String[] posterStrs = new String[len];
+            Movie[] movies = new Movie[len];
 
             for (int i = 0; i < len; i++) {
                 // Get each movie from the array
-                JSONObject movie = moviesJson.getJSONObject(i);
-                // Get the poster filename and strip the leading slash off
-                String posterPathStr = movie.getString(TMDB_POSTER_PATH).replace("/", "");
-
-                Uri builtUri = Uri.parse(TMDB_IMG_ROOT).buildUpon()
-                        .appendPath(TMDB_IMG_SIZE_PATH)
-                        .appendPath(posterPathStr)
-                        .build();
-
-                String posterUrl = builtUri.toString();
-
-                posterStrs[i] = posterUrl;
-
-                Log.v(LOG_TAG, "Poster: " + posterUrl);
+                movies[i] = new Movie(moviesJson.getJSONObject(i));
             }
 
-            return posterStrs;
+            return movies;
         }
     }
 }
