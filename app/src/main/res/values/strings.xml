@@ -7,6 +7,9 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
+    <string name="pref_cat_feed_label">Movie Feed</string>
+    <string name="pref_cat_feed">feed</string>
+
     <string name="pref_sort_label">Sort By</string>
     <string name="pref_sort_key" translatable="false">sort</string>
     <string name="pref_sort_popular_label">Popular</string>
