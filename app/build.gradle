@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: 'api.gradle'
 
 android {
     compileSdkVersion 23
@@ -16,9 +17,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    buildTypes.each {
-        it.buildConfigField 'String', 'THE_MOVIE_DATABASE_API_KEY', '"705bdcf0171d0d9f39112be94941b0a5"'
     }
 }
 
