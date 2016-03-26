@@ -1,7 +1,6 @@
 package com.redbassett.popwatch;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -23,9 +22,6 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        final String TMDB_IMG_ROOT = "http://image.tmdb.org/t/p/";
-        final String TMDB_IMG_SIZE_PATH = "w185";
-
         String path = getItem(position).getPosterUrl();
         ImageView imageView;
 
@@ -36,12 +32,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
             imageView = (ImageView) convertView;
         }
 
-        String posterURL = Uri.parse(TMDB_IMG_ROOT).buildUpon()
-                .appendPath(TMDB_IMG_SIZE_PATH)
-                .appendPath(path)
-                .build().toString();
-
-        Picasso.with(mContext).load(posterURL).into(imageView);
+        Picasso.with(mContext).load(path).into(imageView);
         return imageView;
     }
 

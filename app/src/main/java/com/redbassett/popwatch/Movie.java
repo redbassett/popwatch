@@ -1,5 +1,6 @@
 package com.redbassett.popwatch;
 
+import android.net.Uri;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -11,6 +12,9 @@ import org.json.JSONObject;
 public class Movie {
     protected int id;
     protected String posterUrl;
+
+    protected final String TMDB_IMG_ROOT = "http://image.tmdb.org/t/p/";
+    protected final String TMDB_IMG_SIZE_PATH = "w185";
 
     private static final String LOG_TAG = Movie.class.getSimpleName();
 
@@ -60,6 +64,11 @@ public class Movie {
 
     public void setPosterUrl(String posterUrl) {
         // The Movie Databse API sends poster Uris with a leading slash, but we don't want it
-        this.posterUrl = posterUrl.replace("/","");
+        posterUrl = posterUrl.replace("/","");
+
+        this.posterUrl = Uri.parse(this.TMDB_IMG_ROOT).buildUpon()
+                .appendPath(this.TMDB_IMG_SIZE_PATH)
+                .appendPath(posterUrl)
+                .build().toString();
     }
 }
