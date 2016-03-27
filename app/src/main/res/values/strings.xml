@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">PopWatch</string>
 
+    <string name="date_format">M/d/y</string>
+
     <!-- Action menus -->
     <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
