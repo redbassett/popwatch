@@ -27,7 +27,8 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
         if (convertView == null) {
             imageView = new ImageView(mContext);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         } else {
             imageView = (ImageView) convertView;
         }
