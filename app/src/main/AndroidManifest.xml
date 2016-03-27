@@ -27,6 +27,7 @@
                 android:value="com.redbassett.popwatch.MainActivity" />
         </activity>
         <activity android:name=".MovieDetailActivity"
+            android:label="@string/movie_detail_label"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

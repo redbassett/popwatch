@@ -18,4 +18,7 @@
     <string name="pref_sort_popular">popular</string>
     <string name="pref_sort_top_label">Top Rated</string>
     <string name="pref_sort_top">top</string>
+
+    <!-- Movie details -->
+    <string name="movie_detail_label">Movie Details</string>
 </resources>
