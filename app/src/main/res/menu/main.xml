@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- We need to include the res-auto schema in our own scope for showAsAction to work -->
+<!-- See for more info: http://stackoverflow.com/a/17914095/817496 -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:popwatch="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_refresh"
         android:title="@string/action_refresh"
         android:showAsAction="never" />
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:showAsAction="never" />
+    <item android:id="@+id/action_sort"
+        android:title="Sort…"
+        popwatch:showAsAction="always">
+        <menu>
+            <item android:id="@+id/action_sort_popular"
+                android:title="Popular" />
+            <item android:id="@+id/action_sort_top"
+                android:title="Top Rated" />
+        </menu>
+    </item>
 </menu>

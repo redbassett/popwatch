@@ -72,6 +72,22 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
+            // The following two casses must be scoped because they define the same variable
+            // See for more information: http://stackoverflow.com/a/10810847/817496
+            case R.id.action_sort_popular: {
+                SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
+                prefEditor.putString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_popular));
+                prefEditor.commit();
+                updatePopularMovies();
+                return true;
+            }
+            case R.id.action_sort_top: {
+                SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
+                prefEditor.putString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_top));
+                prefEditor.commit();
+                updatePopularMovies();
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
