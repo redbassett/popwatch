@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                updatePopularMovies();
+                updateMovieFeed();
                 return true;
             /** Settings removed until other options are added
             case R.id.action_settings:
@@ -79,14 +79,14 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
                 prefEditor.putString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_popular));
                 prefEditor.commit();
-                updatePopularMovies();
+                updateMovieFeed();
                 return true;
             }
             case R.id.action_sort_top: {
                 SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
                 prefEditor.putString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_top));
                 prefEditor.commit();
-                updatePopularMovies();
+                updateMovieFeed();
                 return true;
             }
         }
@@ -94,14 +94,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void updatePopularMovies() {
+    private void updateMovieFeed() {
         new FetchMovieFeedTask().execute();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        updatePopularMovies();
+        updateMovieFeed();
     }
 
     /**
