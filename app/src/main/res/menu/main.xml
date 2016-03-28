@@ -11,7 +11,7 @@
         android:title="@string/action_settings"
         android:showAsAction="never" /> -->
     <item android:id="@+id/action_sort"
-        android:title="Sort…"
+        android:icon="@drawable/ic_sort_white_24dp"
         popwatch:showAsAction="always">
         <menu>
             <item android:id="@+id/action_sort_popular"
