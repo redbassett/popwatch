@@ -75,9 +75,10 @@ public class MovieDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            /** Settings removed until other options are added
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
-                return true;
+                return true; **/
         }
 
         return super.onOptionsItemSelected(item);

@@ -69,9 +69,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_refresh:
                 updatePopularMovies();
                 return true;
+            /** Settings removed until other options are added
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
-                return true;
+                return true; **/
             // The following two casses must be scoped because they define the same variable
             // See for more information: http://stackoverflow.com/a/10810847/817496
             case R.id.action_sort_popular: {
