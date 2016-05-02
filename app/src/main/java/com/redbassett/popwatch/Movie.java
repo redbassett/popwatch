@@ -1,7 +1,5 @@
 package com.redbassett.popwatch;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -14,7 +12,7 @@ import java.util.Date;
 /**
  * Created by harry on 3/26/16.
  */
-public class Movie implements Parcelable {
+public class Movie {
     protected int id;
     protected String posterUrl;
     protected String title;
@@ -141,45 +139,4 @@ public class Movie implements Parcelable {
     public void setHasTrailer(boolean hasTrailer) {
         this.hasTrailer = hasTrailer;
     }
-
-    /**
-     * This code below implements Parcelable
-     *
-     * Based on http://www.developerphil.com/parcelable-vs-serializable/
-     * (and a number of similar StackOverflow contributions)
-     */
-    public Movie(Parcel in) {
-        this.id = in.readInt();
-        this.posterUrl = in.readString();
-        this.title = in.readString();
-        this.summary = in.readString();
-        this.rating = in.readDouble();
-        this.releaseDate = new Date(in.readLong());
-    }
-
-    @Override
-    public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(this.id);
-        out.writeString(this.posterUrl);
-        out.writeString(this.title);
-        out.writeString(this.summary);
-        out.writeDouble(this.rating);
-        out.writeLong(this.releaseDate.getTime());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Parcelable.Creator<Movie> CREATOR
-            = new Parcelable.Creator<Movie>() {
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 }
