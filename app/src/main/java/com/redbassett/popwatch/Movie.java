@@ -1,6 +1,5 @@
 package com.redbassett.popwatch;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -22,15 +21,16 @@ public class Movie implements Parcelable {
     protected String summary;
     protected double rating;
     protected Date releaseDate;
+    protected boolean hasTrailer;
 
-    protected static final String TMDB_IMG_ROOT = "http://image.tmdb.org/t/p/";
-    protected static final String TMDB_IMG_SIZE_PATH = "w185";
+
     protected static final String TMDB_ID = "id";
     protected static final String TMDB_POSTER_PATH = "poster_path";
     protected static final String TMDB_TITLE = "original_title";
     protected static final String TMDB_SUMMARY = "overview";
     protected static final String TMDB_RATING = "vote_average";
     protected static final String TMDB_RELEASE_DATE = "release_date";
+    protected static final String TMDB_HAS_TRAILER = "video";
 
     private static final String LOG_TAG = Movie.class.getSimpleName();
 
@@ -41,6 +41,7 @@ public class Movie implements Parcelable {
         this.summary = "";
         this.rating = 0.0;
         this.releaseDate = new Date();
+        this.hasTrailer = false;
     }
 
     public Movie(JSONObject jsonData) {
@@ -66,6 +67,7 @@ public class Movie implements Parcelable {
             this.setSummary(jsonData.getString(TMDB_SUMMARY));
             this.setRating(jsonData.getDouble(TMDB_RATING));
             this.setReleaseDate(jsonData.getString(TMDB_RELEASE_DATE));
+            this.setHasTrailer(jsonData.getBoolean(TMDB_HAS_TRAILER));
         } catch (JSONException e) {
             Log.e(LOG_TAG, String.format("Failed to parse JSON Object: %s", e.getMessage()));
         }
@@ -84,13 +86,7 @@ public class Movie implements Parcelable {
     }
 
     public void setPosterUrl(String posterUrl) {
-        // The Movie Databse API sends poster Uris with a leading slash, but we don't want it
-        posterUrl = posterUrl.replace("/","");
-
-        this.posterUrl = Uri.parse(this.TMDB_IMG_ROOT).buildUpon()
-                .appendPath(this.TMDB_IMG_SIZE_PATH)
-                .appendPath(posterUrl)
-                .build().toString();
+        this.posterUrl = posterUrl;
     }
 
     public String getTitle() {
@@ -121,6 +117,10 @@ public class Movie implements Parcelable {
         return this.releaseDate;
     }
 
+    public long getReleaseDateAsLong() {
+        return this.releaseDate.getTime();
+    }
+
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
@@ -132,6 +132,14 @@ public class Movie implements Parcelable {
             Log.e(LOG_TAG, String.format("Cannot parse date: %s", e.getMessage()));
             this.releaseDate = new Date();
         }
+    }
+
+    public boolean getHasTrailer() {
+        return this.hasTrailer;
+    }
+
+    public void setHasTrailer(boolean hasTrailer) {
+        this.hasTrailer = hasTrailer;
     }
 
     /**

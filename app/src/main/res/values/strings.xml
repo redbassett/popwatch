@@ -21,4 +21,8 @@
 
     <!-- Movie details -->
     <string name="movie_detail_label">Movie Details</string>
+
+    <!-- Constants needed in XML, not translateable UI strings -->
+    <string name="content_authority" translatable="false">com.redbassett.popwatch</string>
+    <string name="sync_account_type" translatable="false">popwatch.redbassett.com</string>
 </resources>

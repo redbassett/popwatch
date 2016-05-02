@@ -1,44 +1,46 @@
 package com.redbassett.popwatch;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.redbassett.popwatch.MovieApi.TmdbApi;
+import com.redbassett.popwatch.MovieListFragment.Projection;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 /**
  * Created by harry on 3/25/16.
  */
-public class MovieArrayAdapter extends ArrayAdapter<Movie> {
-    private Context mContext;
+public class MovieArrayAdapter extends CursorAdapter {
 
-    public MovieArrayAdapter(Context c, int r, ArrayList<Movie> t) {
-        super(c, r, t);
-        mContext = c;
+    public MovieArrayAdapter(Context context, Cursor cursor, int flags) {
+        super(context, cursor, flags);
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-        String path = getItem(position).getPosterUrl();
-        ImageView imageView;
-
-        if (convertView == null) {
-            imageView = new ImageView(mContext);
-            imageView.setAdjustViewBounds(true);
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        } else {
-            imageView = (ImageView) convertView;
-        }
-
-        Picasso.with(mContext).load(path).into(imageView);
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        ImageView imageView = new ImageView(context);
+        this.bindView(imageView, context, cursor);
         return imageView;
     }
 
     @Override
-    public void addAll(Movie[] results) {
-        super.addAll(results);
+    public void bindView(View view, Context context, Cursor cursor) {
+        Movie mov = new Movie();
+        mov.setId(cursor.getInt(Projection.COL_MOVIE_ID));
+        mov.setPosterUrl(cursor.getString(Projection.COL_POSTER_PATH));
+
+        ImageView imageView = (ImageView) view;
+        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        Picasso.with(context).load(TmdbApi.generatePosterImageUrl(
+                mov.getPosterUrl())).into(imageView);
+
+        Log.d("blarg", TmdbApi.generatePosterImageUrl(mov.getPosterUrl()));
     }
 }
