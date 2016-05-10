@@ -3,7 +3,6 @@ package com.redbassett.popwatch;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -40,7 +39,5 @@ public class MovieArrayAdapter extends CursorAdapter {
 
         Picasso.with(context).load(TmdbApi.generatePosterImageUrl(
                 mov.getPosterUrl())).into(imageView);
-
-        Log.d("blarg", TmdbApi.generatePosterImageUrl(mov.getPosterUrl()));
     }
 }

@@ -72,8 +72,6 @@ public class PopwatchSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 getContext().getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, cvArray);
             }
-
-            Log.d(LOG_TAG, "Popwatch Sync Completed – " + cvVector.size() + " rows inserted.");
         }
     }
 

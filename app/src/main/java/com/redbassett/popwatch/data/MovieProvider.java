@@ -6,7 +6,6 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.util.Log;
 
 public class MovieProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -102,7 +101,6 @@ public class MovieProvider extends ContentProvider {
         }
 
         getContext().getContentResolver().notifyChange(uri, null);
-        Log.d("blarg", uri.toString());
         return returnUri;
     }
 
