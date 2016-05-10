@@ -11,7 +11,6 @@ import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.redbassett.popwatch.Movie;
 import com.redbassett.popwatch.MovieApi.TmdbApi;
@@ -20,6 +19,8 @@ import com.redbassett.popwatch.Utility;
 import com.redbassett.popwatch.Utility.C;
 import com.redbassett.popwatch.data.PopwatchContract.MovieEntry;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class PopwatchSyncAdapter extends AbstractThreadedSyncAdapter {
@@ -54,10 +55,13 @@ public class PopwatchSyncAdapter extends AbstractThreadedSyncAdapter {
             for (int i = 0; i < movies.length; i++) {
                 ContentValues vals = new ContentValues();
 
+                DateFormat sqlDateFormat = SimpleDateFormat.getDateInstance();
+
                 vals.put(MovieEntry.COLUMN_NAME_TITLE, movies[i].getTitle());
                 vals.put(MovieEntry.COLUMN_NAME_POSTER_PATH, movies[i].getPosterUrl());
                 vals.put(MovieEntry.COLUMN_NAME_RATING, movies[i].getRating());
-                vals.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, movies[i].getReleaseDateAsLong());
+                vals.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, sqlDateFormat.format(
+                        movies[i].getReleaseDate()));
                 vals.put(MovieEntry.COLUMN_NAME_SUMMARY, movies[i].getSummary());
 
                 cvVector.add(vals);
