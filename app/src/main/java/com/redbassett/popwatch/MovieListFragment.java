@@ -1,5 +1,6 @@
 package com.redbassett.popwatch;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -24,6 +25,7 @@ import com.redbassett.popwatch.sync.PopwatchSyncAdapter;
 
 public class MovieListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final int MOVIE_LOADER = 0;
+    private Callback mCallback;
 
     public static class Projection {
         public static final String[] MOVIE_COLUMNS = {
@@ -54,6 +56,17 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (Callback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement Callback");
+        }
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MOVIE_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
@@ -79,8 +92,7 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
-                    ((Callback) getActivity())
-                            .onItemSelected(MovieEntry.buildMovieUri(
+                    mCallback.onItemSelected(MovieEntry.buildMovieUri(
                                     cursor.getInt(Projection.COL_MOVIE_ID)
                             ));
                 }

@@ -1,5 +1,7 @@
 package com.redbassett.popwatch;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -8,7 +10,7 @@ import android.view.MenuItem;
 import com.redbassett.popwatch.sync.PopwatchSyncAdapter;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieListFragment.Callback {
     /**
      * LOG_TAG provides a constant to pass to Log methods indicating the class that the log
      * message was generated in.
@@ -50,5 +52,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onItemSelected(Uri contentUri) {
+        Intent intent = new Intent(this, MovieDetailActivity.class).setData(contentUri);
+        startActivity(intent);
     }
 }
