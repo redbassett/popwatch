@@ -67,7 +67,7 @@ public class MovieProvider extends ContentProvider {
                 retCursor = mDbHelper.getReadableDatabase().query(
                         PopwatchContract.MovieEntry.TABLE_NAME,
                         projection,
-                        "_ID = '?'",
+                        "_ID = ?",
                         new String[]{movieId},
                         null,
                         null,
