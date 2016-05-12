@@ -22,32 +22,6 @@ public class Utility {
         public static final HashMap<String, Object> DEFAULTS = new HashMap<String, Object>(){{
             put(PREF_SORT, PREF_SORT_BY_POPULAR);
         }};
-//
-//        private SharedPreferences mSharedPrefs;
-//
-//        public Prefs(Context context) {
-//            this.mSharedPrefs = context.getDefault;
-//        }
-//
-//        public Boolean getBoolean(String key) {
-//            return mSharedPrefs.getBoolean(key, (boolean) DEFAULTS.get(key));
-//        }
-//
-//        public float getFloat(String key) {
-//            return mSharedPrefs.getFloat(key, (float) DEFAULTS.get(key));
-//        }
-//
-//        public int getInt(String key) {
-//            return mSharedPrefs.getInt(key, (int) DEFAULTS.get(key));
-//        }
-//
-//        public long getLong(String key) {
-//            return mSharedPrefs.getLong(key, (long) DEFAULTS.get(key));
-//        }
-//
-//        public String getString(String key) {
-//            return mSharedPrefs.getString(key, (String) DEFAULTS.get(key));
-//        }
     }
 
     // Constants
