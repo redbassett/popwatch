@@ -13,5 +13,5 @@
     </item>
     <item android:id="@+id/action_refresh"
         android:title="@string/action_refresh"
-        android:showAsAction="always" />
+        popwatch:showAsAction="always" />
 </menu>
