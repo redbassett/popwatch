@@ -6,9 +6,11 @@
         popwatch:showAsAction="always">
         <menu>
             <item android:id="@+id/action_sort_popular"
-                android:title="Popular" />
+                android:title="@string/pref_sort_popular_label" />
             <item android:id="@+id/action_sort_top"
-                android:title="Top Rated" />
+                android:title="@string/pref_sort_top_label" />
+            <item android:id="@+id/action_sort_fav"
+                android:title="@string/pref_sort_fav_label" />
         </menu>
     </item>
     <item android:id="@+id/action_refresh"
