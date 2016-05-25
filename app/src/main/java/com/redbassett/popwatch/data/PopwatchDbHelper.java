@@ -7,34 +7,47 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.redbassett.popwatch.data.PopwatchContract.MovieEntry;
 
 public class PopwatchDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "popwatch.db";
 
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
-            MovieEntry._ID + " INTEGER PRIMARY KEY," +
-            MovieEntry.COLUMN_NAME_TITLE + " TEXT," +
-            MovieEntry.COLUMN_NAME_POSTER_PATH + " TEXT," +
-            MovieEntry.COLUMN_NAME_SUMMARY + " TEXT," +
-            MovieEntry.COLUMN_NAME_RELEASE_DATE + " DATE," +
-            MovieEntry.COLUMN_NAME_RATING + " REAL," +
-            MovieEntry.COLUMN_NAME_TRAILER_URL + " TEXT," +
-            MovieEntry.COLUMN_NAME_REFERENCE_ID + " INTEGER" +
-            " )";
+    private static String createMovieTable(String tableName) {
+        return "CREATE TABLE " + tableName + " (" +
+                MovieEntry._ID + " INTEGER PRIMARY KEY," +
+                MovieEntry.COLUMN_NAME_TITLE + " TEXT," +
+                MovieEntry.COLUMN_NAME_POSTER_PATH + " TEXT," +
+                MovieEntry.COLUMN_NAME_SUMMARY + " TEXT," +
+                MovieEntry.COLUMN_NAME_RELEASE_DATE + " DATE," +
+                MovieEntry.COLUMN_NAME_RATING + " REAL," +
+                MovieEntry.COLUMN_NAME_TRAILER_URL + " TEXT," +
+                MovieEntry.COLUMN_NAME_REFERENCE_ID + " INTEGER" +
+                " )";
+    }
 
-    private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME;
+    private static String deleteMovieTable(String tableName) {
+        return "DROP TABLE IF EXISTS " + tableName;
+    }
+
+    private static final String[] TABLE_NAMES = {
+            PopwatchContract.PopularMovieEntry.TABLE_NAME,
+            PopwatchContract.TopMovieEntry.TABLE_NAME,
+            PopwatchContract.FavMovieEntry.TABLE_NAME
+    };
 
     public PopwatchDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        for (String name : TABLE_NAMES) {
+            db.execSQL(createMovieTable(name));
+        }
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_ENTRIES);
+        for (String name : TABLE_NAMES) {
+            db.execSQL(deleteMovieTable(name));
+        }
+
         onCreate(db);
     }
 

@@ -66,4 +66,22 @@ public final class PopwatchContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
+
+    public static abstract class PopularMovieEntry extends MovieEntry {
+        public static final String TABLE_NAME = "popular_movies";
+        public static final Uri CONTENT_URI = MovieEntry.CONTENT_URI.buildUpon().appendPath("pop")
+                .build();
+    }
+
+    public static abstract class TopMovieEntry extends MovieEntry {
+        public static final String TABLE_NAME = "top_movies";
+        public static final Uri CONTENT_URI = MovieEntry.CONTENT_URI.buildUpon().appendPath("top")
+                .build();
+    }
+
+    public static abstract class FavMovieEntry extends MovieEntry {
+        public static final String TABLE_NAME = "fav_movies";
+        public static final Uri CONTENT_URI = MovieEntry.CONTENT_URI.buildUpon().appendPath("fav")
+                .build();
+    }
 }

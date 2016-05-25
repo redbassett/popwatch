@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -119,6 +118,12 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
                 prefEditor.putString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_top));
                 prefEditor.apply();
                 updateMovieFeed();
+                return true;
+            }
+            case R.id.action_sort_fav: {
+                SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+                prefEditor.putString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_fav));
+                prefEditor.apply();
                 return true;
             }
             case R.id.action_refresh:

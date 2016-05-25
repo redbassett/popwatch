@@ -17,6 +17,7 @@ import com.redbassett.popwatch.MovieApi.TmdbApi;
 import com.redbassett.popwatch.R;
 import com.redbassett.popwatch.Utility;
 import com.redbassett.popwatch.Utility.C;
+import com.redbassett.popwatch.data.PopwatchContract;
 import com.redbassett.popwatch.data.PopwatchContract.MovieEntry;
 
 import java.text.DateFormat;
@@ -42,27 +43,24 @@ public class PopwatchSyncAdapter extends AbstractThreadedSyncAdapter {
                               Bundle extras,
                               String authority,
                               ContentProviderClient provider,
-                              SyncResult syncResult) {
+                              SyncResult syncResult) {TmdbApi api = new TmdbApi();
+        Movie[] popularMovies = api.getMovies(Utility.Prefs.PREF_SORT_BY_POPULAR);
+        Movie[] topMovies = api.getMovies(Utility.Prefs.PREF_SORT_BY_TOP);
 
-        String sortPref = Utility.getSortOrder(getContext());
+        if (popularMovies.length > 0) {
+            ArrayList<ContentValues> cvVector = new ArrayList<ContentValues>(popularMovies.length);
 
-        TmdbApi api = new TmdbApi();
-        Movie[] movies = api.getMovies(sortPref);
-
-        if (movies.length > 0) {
-            ArrayList<ContentValues> cvVector = new ArrayList<ContentValues>(movies.length);
-
-            for (int i = 0; i < movies.length; i++) {
+            for (int i = 0; i < popularMovies.length; i++) {
                 ContentValues vals = new ContentValues();
 
                 DateFormat sqlDateFormat = SimpleDateFormat.getDateInstance();
 
-                vals.put(MovieEntry.COLUMN_NAME_TITLE, movies[i].getTitle());
-                vals.put(MovieEntry.COLUMN_NAME_POSTER_PATH, movies[i].getPosterUrl());
-                vals.put(MovieEntry.COLUMN_NAME_RATING, movies[i].getRating());
+                vals.put(MovieEntry.COLUMN_NAME_TITLE, popularMovies[i].getTitle());
+                vals.put(MovieEntry.COLUMN_NAME_POSTER_PATH, popularMovies[i].getPosterUrl());
+                vals.put(MovieEntry.COLUMN_NAME_RATING, popularMovies[i].getRating());
                 vals.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, sqlDateFormat.format(
-                        movies[i].getReleaseDate()));
-                vals.put(MovieEntry.COLUMN_NAME_SUMMARY, movies[i].getSummary());
+                        popularMovies[i].getReleaseDate()));
+                vals.put(MovieEntry.COLUMN_NAME_SUMMARY, popularMovies[i].getSummary());
 
                 cvVector.add(vals);
             }
@@ -72,7 +70,38 @@ public class PopwatchSyncAdapter extends AbstractThreadedSyncAdapter {
                 cvVector.toArray(cvArray);
 
                 // Delete existing content to avoid duplicates
-                getContext().getContentResolver().delete(MovieEntry.CONTENT_URI, null, null);
+                getContext().getContentResolver().delete(
+                        PopwatchContract.PopularMovieEntry.CONTENT_URI, null, null);
+
+                getContext().getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, cvArray);
+            }
+        }
+
+        if (topMovies.length > 0) {
+            ArrayList<ContentValues> cvVector = new ArrayList<ContentValues>(topMovies.length);
+
+            for (int i = 0; i < topMovies.length; i++) {
+                ContentValues vals = new ContentValues();
+
+                DateFormat sqlDateFormat = SimpleDateFormat.getDateInstance();
+
+                vals.put(MovieEntry.COLUMN_NAME_TITLE, topMovies[i].getTitle());
+                vals.put(MovieEntry.COLUMN_NAME_POSTER_PATH, topMovies[i].getPosterUrl());
+                vals.put(MovieEntry.COLUMN_NAME_RATING, topMovies[i].getRating());
+                vals.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, sqlDateFormat.format(
+                        topMovies[i].getReleaseDate()));
+                vals.put(MovieEntry.COLUMN_NAME_SUMMARY, topMovies[i].getSummary());
+
+                cvVector.add(vals);
+            }
+
+            if (cvVector.size() > 0) {
+                ContentValues[] cvArray = new ContentValues[cvVector.size()];
+                cvVector.toArray(cvArray);
+
+                // Delete existing content to avoid duplicates
+                getContext().getContentResolver().delete(
+                        PopwatchContract.TopMovieEntry.CONTENT_URI, null, null);
 
                 getContext().getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, cvArray);
             }

@@ -18,9 +18,13 @@ public class Utility {
         public static final String PREF_SORT = "sort";
         public static final String PREF_SORT_BY_POPULAR = "popular";
         public static final String PREF_SORT_BY_TOP = "top";
+        public static final String PREF_SORT_BY_FAV = "favorites";
+
+        public static final String PREF_FAV = "favorites";
 
         public static final HashMap<String, Object> DEFAULTS = new HashMap<String, Object>(){{
             put(PREF_SORT, PREF_SORT_BY_POPULAR);
+            put(PREF_FAV, null);
         }};
     }
 
