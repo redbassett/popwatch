@@ -73,7 +73,8 @@ public class PopwatchSyncAdapter extends AbstractThreadedSyncAdapter {
                 getContext().getContentResolver().delete(
                         PopwatchContract.PopularMovieEntry.CONTENT_URI, null, null);
 
-                getContext().getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, cvArray);
+                getContext().getContentResolver().bulkInsert(
+                        PopwatchContract.PopularMovieEntry.CONTENT_URI, cvArray);
             }
         }
 
@@ -103,7 +104,8 @@ public class PopwatchSyncAdapter extends AbstractThreadedSyncAdapter {
                 getContext().getContentResolver().delete(
                         PopwatchContract.TopMovieEntry.CONTENT_URI, null, null);
 
-                getContext().getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, cvArray);
+                getContext().getContentResolver().bulkInsert(
+                        PopwatchContract.TopMovieEntry.CONTENT_URI, cvArray);
             }
         }
     }
