@@ -124,6 +124,7 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
                 SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
                 prefEditor.putString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_fav));
                 prefEditor.apply();
+                updateMovieFeed();
                 return true;
             }
             case R.id.action_refresh:
