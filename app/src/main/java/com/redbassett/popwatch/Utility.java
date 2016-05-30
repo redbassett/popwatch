@@ -18,7 +18,7 @@ public class Utility {
         public static final String PREF_SORT = "sort";
         public static final String PREF_SORT_BY_POPULAR = "popular";
         public static final String PREF_SORT_BY_TOP = "top";
-        public static final String PREF_SORT_BY_FAV = "favorites";
+        public static final String PREF_SORT_BY_FAV = "fav";
 
         public static final String PREF_FAV = "favorites";
 
