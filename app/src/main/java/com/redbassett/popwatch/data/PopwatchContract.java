@@ -1,7 +1,6 @@
 package com.redbassett.popwatch.data;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -55,16 +54,6 @@ public final class PopwatchContract {
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + MOVIE_PATH;
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + MOVIE_PATH;
-
-        /**
-         * Provides the content URI for a specific movie by id
-         *
-         * @param id The id of the movie to return the URI for.
-         * @return The content URI for the movie with the provided id.
-         */
-        public static Uri buildMovieUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
     }
 
     public static abstract class PopularMovieEntry extends MovieEntry {

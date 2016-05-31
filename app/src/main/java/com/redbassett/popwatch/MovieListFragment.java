@@ -1,6 +1,7 @@
 package com.redbassett.popwatch;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.redbassett.popwatch.data.MovieProvider;
 import com.redbassett.popwatch.data.PopwatchContract;
 import com.redbassett.popwatch.data.PopwatchContract.MovieEntry;
 import com.redbassett.popwatch.sync.PopwatchSyncAdapter;
@@ -92,7 +95,13 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
-                    mCallback.onItemSelected(MovieEntry.buildMovieUri(
+                    // The sort preference, for use determining which table to use
+                    String sortPref = Utility.getSortOrder(getContext());
+
+                    mCallback.onItemSelected(ContentUris.withAppendedId(
+                                    // Get the content uri for the correct table based on the sort
+                                    // preference
+                                    new MovieProvider().getTableUri(sortPref),
                                     cursor.getInt(Projection.COL_MOVIE_ID)
                             ));
                 }

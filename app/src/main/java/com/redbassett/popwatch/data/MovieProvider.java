@@ -1,6 +1,7 @@
 package com.redbassett.popwatch.data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -66,15 +67,16 @@ public class MovieProvider extends ContentProvider {
     }
 
     /**
-     * Provide the "default" movie table Uri as decided by sort preferences.
+     * Provide the Content Uri for each table.
      *
-     * @return the request Uri for the default table.
+     * @param sortPref The table, as referenced in the sort preferences.
+     * @return the Uri for the requested table.
      */
-    private Uri getDefaultTableUri() {
+    public Uri getTableUri(String sortPref) {
         Uri.Builder builder = PopwatchContract.BASE_CONTENT_URI.buildUpon().appendPath(
                 PopwatchContract.MOVIE_PATH);
 
-        switch (Utility.getSortOrder(getContext())) {
+        switch (sortPref) {
             case Utility.Prefs.PREF_SORT_BY_TOP:
                 builder.appendPath("top");
                 break;
@@ -87,6 +89,15 @@ public class MovieProvider extends ContentProvider {
         }
 
         return builder.build();
+    }
+
+    /**
+     * Provide the "default" movie table Uri as decided by sort preferences.
+     *
+     * @return the request Uri for the default table.
+     */
+    private Uri getDefaultTableUri() {
+        return getTableUri(Utility.getSortOrder(getContext()));
     }
 
     @Override
@@ -105,7 +116,6 @@ public class MovieProvider extends ContentProvider {
             case TOP_MOVIES_CODE:
             case FAV_MOVIES_CODE:
                 return PopwatchContract.MovieEntry.CONTENT_TYPE;
-            case MOVIE_BY_ID_CODE:
             case POP_MOVIE_BY_ID_CODE:
             case TOP_MOVIE_BY_ID_CODE:
             case FAV_MOVIE_BY_ID_CODE:
@@ -135,11 +145,10 @@ public class MovieProvider extends ContentProvider {
                 );
                 break;
             }
-            case MOVIE_BY_ID_CODE:
             case POP_MOVIE_BY_ID_CODE:
             case TOP_MOVIE_BY_ID_CODE:
             case FAV_MOVIE_BY_ID_CODE: {
-                String movieId = uri.getPathSegments().get(1);
+                String movieId = uri.getPathSegments().get(2);
                 retCursor = mDbHelper.getReadableDatabase().query(
                         getMovieTableName(uri),
                         projection,
@@ -171,7 +180,7 @@ public class MovieProvider extends ContentProvider {
             case FAV_MOVIES_CODE:
                 long _id = db.insert(getMovieTableName(uri), null, values);
                 if (_id > 0) {
-                    returnUri = PopwatchContract.MovieEntry.buildMovieUri(_id);
+                    returnUri = ContentUris.withAppendedId(uri, _id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
