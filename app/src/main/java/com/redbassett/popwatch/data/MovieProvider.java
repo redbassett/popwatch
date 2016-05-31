@@ -19,7 +19,7 @@ public class MovieProvider extends ContentProvider {
     private static final int TOP_MOVIES_CODE = 102;
     private static final int FAV_MOVIES_CODE = 103;
 
-    private static final int MOVIE_BY_ID_CODE = 200;
+    // Movie by id code (200) removed, as table must be known to select movie
     private static final int POP_MOVIE_BY_ID_CODE = 201;
     private static final int TOP_MOVIE_BY_ID_CODE = 202;
     private static final int FAV_MOVIE_BY_ID_CODE = 203;
@@ -32,7 +32,6 @@ public class MovieProvider extends ContentProvider {
         matcher.addURI(authority, PopwatchContract.MOVIE_PATH + "/pop", POP_MOVIES_CODE);
         matcher.addURI(authority, PopwatchContract.MOVIE_PATH + "/top", TOP_MOVIES_CODE);
         matcher.addURI(authority, PopwatchContract.MOVIE_PATH + "/fav", FAV_MOVIES_CODE);
-        matcher.addURI(authority, PopwatchContract.MOVIE_PATH + "/#", MOVIE_BY_ID_CODE);
         matcher.addURI(authority, PopwatchContract.MOVIE_PATH + "/pop/#", POP_MOVIE_BY_ID_CODE);
         matcher.addURI(authority, PopwatchContract.MOVIE_PATH + "/top/#", TOP_MOVIE_BY_ID_CODE);
         matcher.addURI(authority, PopwatchContract.MOVIE_PATH + "/fav/#", FAV_MOVIE_BY_ID_CODE);
@@ -60,7 +59,6 @@ public class MovieProvider extends ContentProvider {
             case FAV_MOVIE_BY_ID_CODE:
                 return PopwatchContract.FavMovieEntry.TABLE_NAME;
             case MOVIES_CODE:
-            case MOVIE_BY_ID_CODE:
                 return getMovieTableName(getDefaultTableUri());
             default:
                 throw new UnsupportedOperationException("Unknown Uri: " + uri);
