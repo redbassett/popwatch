@@ -108,6 +108,9 @@ public class MovieProvider extends ContentProvider {
             case FAV_MOVIES_CODE:
                 return PopwatchContract.MovieEntry.CONTENT_TYPE;
             case MOVIE_BY_ID_CODE:
+            case POP_MOVIE_BY_ID_CODE:
+            case TOP_MOVIE_BY_ID_CODE:
+            case FAV_MOVIE_BY_ID_CODE:
                 return PopwatchContract.MovieEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown Uri: " + uri);
@@ -134,7 +137,10 @@ public class MovieProvider extends ContentProvider {
                 );
                 break;
             }
-            case MOVIE_BY_ID_CODE: {
+            case MOVIE_BY_ID_CODE:
+            case POP_MOVIE_BY_ID_CODE:
+            case TOP_MOVIE_BY_ID_CODE:
+            case FAV_MOVIE_BY_ID_CODE: {
                 String movieId = uri.getPathSegments().get(1);
                 retCursor = mDbHelper.getReadableDatabase().query(
                         getMovieTableName(uri),
