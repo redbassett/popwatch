@@ -1,6 +1,8 @@
 package com.redbassett.popwatch;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,9 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -54,11 +59,15 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         public static final int COL_TITLE = 7;
     }
 
+    private Cursor mCursor;
+
     private ImageView mPosterView;
     private TextView mTitleView;
     private TextView mSummaryView;
     private TextView mReleaseDateView;
     private RatingBar mRatingView;
+
+    private MenuItem mActionFav;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,9 +88,85 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.movie_detail_fragment, menu);
+        mActionFav = menu.findItem(R.id.action_fav);
+        if (mCursor != null)
+            updateFavIcon(isFavorited());
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_fav:
+                toggleFavorite();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isFavorited() {
+        long currentId = mCursor.getLong(MovieListFragment.Projection.COL_MOVIE_ID);
+
+        Cursor result = getContext().getContentResolver().query(
+                PopwatchContract.FavMovieEntry.CONTENT_URI,
+                Projection.DETAIL_COLUMNS,
+                "_ID = ?",
+                new String[]{String.valueOf(currentId)},
+                null
+        );
+
+        return result.moveToFirst();
+    }
+
+    private boolean toggleFavorite() {
+        long currentId = mCursor.getLong(MovieListFragment.Projection.COL_MOVIE_ID);
+        boolean faved = isFavorited();
+
+        if (faved) {
+            if (getContext().getContentResolver().delete(
+                    PopwatchContract.FavMovieEntry.CONTENT_URI,
+                    "_ID = ?",
+                    new String[]{String.valueOf(currentId)}
+            ) == 1) {
+                updateFavIcon(false);
+                return false;
+            } else
+                throw new android.database.SQLException(
+                        "Attempted to unfavorite movie not found in favorites " +
+                        String.valueOf(currentId));
+        } else {
+            ContentValues vals = new ContentValues();
+            DatabaseUtils.cursorRowToContentValues(mCursor, vals);
+
+            getContext().getContentResolver().insert(
+                    PopwatchContract.FavMovieEntry.CONTENT_URI,
+                    vals
+            );
+
+            updateFavIcon(true);
+            return true;
+        }
+
+    }
+
+    private void updateFavIcon(boolean faved) {
+        mActionFav.setIcon((faved) ?
+                R.drawable.ic_star_black_24dp : R.drawable.ic_star_border_black_24dp);
     }
 
     @Override
@@ -102,6 +187,11 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
+            mCursor = data;
+
+            if (mActionFav != null)
+                updateFavIcon(isFavorited());
+
             String posterPath = data.getString(Projection.COL_POSTER_PATH);
             Picasso.with(getActivity()).load(TmdbApi.generatePosterImageUrl(posterPath)).into(mPosterView);
 
