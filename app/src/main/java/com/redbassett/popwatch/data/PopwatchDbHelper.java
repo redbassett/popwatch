@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.redbassett.popwatch.data.PopwatchContract.MovieEntry;
 
 public class PopwatchDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "popwatch.db";
 
     private static String createMovieTable(String tableName) {
@@ -18,8 +18,7 @@ public class PopwatchDbHelper extends SQLiteOpenHelper {
                 MovieEntry.COLUMN_NAME_SUMMARY + " TEXT," +
                 MovieEntry.COLUMN_NAME_RELEASE_DATE + " DATE," +
                 MovieEntry.COLUMN_NAME_RATING + " REAL," +
-                MovieEntry.COLUMN_NAME_TRAILER_URL + " TEXT," +
-                MovieEntry.COLUMN_NAME_REFERENCE_ID + " INTEGER" +
+                MovieEntry.COLUMN_NAME_TRAILER_URL + " TEXT" +
                 " )";
     }
 

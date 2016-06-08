@@ -41,7 +41,6 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         public static final String[] DETAIL_COLUMNS = {
                 PopwatchContract.MovieEntry._ID,
                 PopwatchContract.MovieEntry.COLUMN_NAME_POSTER_PATH,
-                PopwatchContract.MovieEntry.COLUMN_NAME_REFERENCE_ID,
                 PopwatchContract.MovieEntry.COLUMN_NAME_TRAILER_URL,
                 PopwatchContract.MovieEntry.COLUMN_NAME_RATING,
                 PopwatchContract.MovieEntry.COLUMN_NAME_SUMMARY,
@@ -51,12 +50,11 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
 
         public static final int COL_MOVIE_ID = 0;
         public static final int COL_POSTER_PATH = 1;
-        public static final int COL_MOVIE_REFERENCE_ID = 2;
-        public static final int COL_TRAILER_URL = 3;
-        public static final int COL_RATING = 4;
-        public static final int COL_SUMMARY = 5;
-        public static final int COL_RELEASE_DATE = 6;
-        public static final int COL_TITLE = 7;
+        public static final int COL_TRAILER_URL = 2;
+        public static final int COL_RATING = 3;
+        public static final int COL_SUMMARY = 4;
+        public static final int COL_RELEASE_DATE = 5;
+        public static final int COL_TITLE = 6;
     }
 
     private Cursor mCursor;

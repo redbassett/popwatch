@@ -13,7 +13,7 @@ import java.util.Date;
  * Created by harry on 3/26/16.
  */
 public class Movie {
-    protected int id;
+    protected long id;
     protected String posterUrl;
     protected String title;
     protected String summary;
@@ -59,7 +59,7 @@ public class Movie {
     // the first statement in a method, so it couldn't be done inside the try.
     private void _construct(JSONObject jsonData) {
         try {
-            this.setId(jsonData.getInt(TMDB_ID));
+            this.setId(jsonData.getLong(TMDB_ID));
             this.setPosterUrl(jsonData.getString(TMDB_POSTER_PATH));
             this.setTitle(jsonData.getString(TMDB_TITLE));
             this.setSummary(jsonData.getString(TMDB_SUMMARY));
@@ -71,11 +71,11 @@ public class Movie {
         }
     }
 
-    public int getId() {
+    public long getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

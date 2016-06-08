@@ -22,9 +22,6 @@ public final class PopwatchContract {
         // Movie table name
         public static final String TABLE_NAME = "movie";
 
-        // The TMDB ID of the movie, stored as a long
-        public static final String COLUMN_NAME_REFERENCE_ID = "ref_id";
-
         // Title of the movie, stored as a string
         public static final String COLUMN_NAME_TITLE = "title";
 

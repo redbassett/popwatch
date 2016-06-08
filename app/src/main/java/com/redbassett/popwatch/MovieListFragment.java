@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,13 +32,11 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
     public static class Projection {
         public static final String[] MOVIE_COLUMNS = {
                 MovieEntry._ID,
-                MovieEntry.COLUMN_NAME_POSTER_PATH,
-                MovieEntry.COLUMN_NAME_REFERENCE_ID
+                MovieEntry.COLUMN_NAME_POSTER_PATH
         };
 
         public static final int COL_MOVIE_ID = 0;
         public static final int COL_POSTER_PATH = 1;
-        public static final int COL_MOVIE_REFERENCE_ID = 2;
     }
 
     public interface Callback {
