@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:popwatch="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_sort"
-        android:icon="@drawable/ic_sort_white_24dp"
+        android:icon="@drawable/ic_sort_white_24px"
         android:title="@string/action_sort_title"
         popwatch:showAsAction="always">
         <menu>

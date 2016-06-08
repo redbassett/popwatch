@@ -164,7 +164,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
 
     private void updateFavIcon(boolean faved) {
         mActionFav.setIcon((faved) ?
-                R.drawable.ic_star_black_24dp : R.drawable.ic_star_border_black_24dp);
+                R.drawable.ic_star_white_24px : R.drawable.ic_star_border_white_24px);
     }
 
     @Override

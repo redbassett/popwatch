@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:popwatch="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_fav"
-        android:icon="@drawable/ic_star_border_black_24dp"
+        android:icon="@drawable/ic_star_border_white_24px"
         android:title="@string/action_fav_title"
         popwatch:showAsAction="always" />
 </menu>
