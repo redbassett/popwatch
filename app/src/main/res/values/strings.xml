@@ -3,6 +3,9 @@
 
     <string name="date_format">M/d/y</string>
 
+    <!-- Empty movie grid -->
+    <string name="no_movies_to_show">No movies to show.</string>
+
     <!-- Action menus -->
     <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>

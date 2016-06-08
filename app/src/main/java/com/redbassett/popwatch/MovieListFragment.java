@@ -86,6 +86,7 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
         mPosterAdapter = new MovieArrayAdapter(getActivity(), null, 0);
 
         GridView posterGrid = (GridView) rootView.findViewById(R.id.poster_grid);
+        posterGrid.setEmptyView(rootView.findViewById(R.id.empty_poster_grid));
         posterGrid.setAdapter(mPosterAdapter);
         posterGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -13,5 +13,12 @@
         android:horizontalSpacing="0dp"
         android:stretchMode="columnWidth"
         android:gravity="center" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/empty_poster_grid"
+        android:text="@string/no_movies_to_show"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
 
 </FrameLayout>
