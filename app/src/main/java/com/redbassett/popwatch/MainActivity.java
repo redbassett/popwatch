@@ -16,11 +16,25 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
      * message was generated in.
      */
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String DETAIL_FRAGMENT_TAG = "DFTAG";
+
+    private boolean mTwoPaneLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (findViewById(R.id.movie_detail_container) != null) {
+            mTwoPaneLayout = true;
+
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, new MovieDetailFragment(),
+                                DETAIL_FRAGMENT_TAG).commit();
+            }
+        } else
+            mTwoPaneLayout = false;
 
         PopwatchSyncAdapter.initializeSyncAdapter(this);
     }
@@ -56,7 +70,19 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
 
     @Override
     public void onItemSelected(Uri contentUri) {
-        Intent intent = new Intent(this, MovieDetailActivity.class).setData(contentUri);
-        startActivity(intent);
+        if (mTwoPaneLayout) {
+            Bundle args = new Bundle();
+            args.putParcelable(MovieDetailFragment.DETAIL_URI, contentUri);
+
+            MovieDetailFragment fragment = new MovieDetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment, DETAIL_FRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, MovieDetailActivity.class).setData(contentUri);
+            startActivity(intent);
+        }
     }
 }
