@@ -27,12 +27,6 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
 
         if (findViewById(R.id.movie_detail_container) != null) {
             mTwoPaneLayout = true;
-
-            if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.movie_detail_container, new MovieDetailFragment(),
-                                DETAIL_FRAGMENT_TAG).commit();
-            }
         } else
             mTwoPaneLayout = false;
 
