@@ -35,6 +35,9 @@ public class TmdbApi extends MovieApi {
     private static final String TMDB_IMG_ROOT = "http://image.tmdb.org/t/p/";
     private static final String TMDB_IMG_SIZE_PATH = "w185";
 
+    private static final String YOUTUBE_IMAGE_ROOT = "http://img.youtube.com/vi/";
+    private static final String YOUTUBE_IMAGE_FILE = "0.jpg";
+
     public Movie[] getMovies(String type) {
         try {
             String typeUri = (type.equals(Utility.Prefs.PREF_SORT_BY_TOP)) ? TOP_URI : POPULAR_URI;
@@ -158,5 +161,10 @@ public class TmdbApi extends MovieApi {
     public static String generatePosterImageUrl(String path) {
         return Uri.parse(TMDB_IMG_ROOT).buildUpon().appendPath(TMDB_IMG_SIZE_PATH)
                 .appendPath(path.replace("/","")).build().toString();
+    }
+
+    public static String generateTrailerThumbImageUrl(String trailerId) {
+        return Uri.parse(YOUTUBE_IMAGE_ROOT).buildUpon().appendPath(trailerId)
+                .appendPath(YOUTUBE_IMAGE_FILE).build().toString();
     }
 }

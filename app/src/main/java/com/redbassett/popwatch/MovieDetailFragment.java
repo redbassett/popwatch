@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -64,6 +65,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     private TextView mSummaryView;
     private TextView mReleaseDateView;
     private RatingBar mRatingView;
+    private ImageView mTrailerView;
 
     private MenuItem mActionFav;
 
@@ -81,6 +83,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         mSummaryView = (TextView) rootView.findViewById(R.id.movie_summary);
         mReleaseDateView = (TextView) rootView.findViewById(R.id.movie_release_date);
         mRatingView = (RatingBar) rootView.findViewById(R.id.movie_rating);
+        mTrailerView = (ImageView) rootView.findViewById(R.id.movie_trailer_thumbnail);
 
         return rootView;
     }
@@ -209,9 +212,30 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
 
             String title = data.getString(Projection.COL_TITLE);
             mTitleView.setText(title);
+
+            mTrailerView.setImageResource(android.R.color.transparent);
+            FetchTrailerTask trailerTask = new FetchTrailerTask();
+            trailerTask.execute(data.getLong(Projection.COL_MOVIE_ID));
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) { }
+
+    // Async class to load movie trailers
+    public class FetchTrailerTask extends AsyncTask<Long, Void, String> {
+        @Override
+        protected String doInBackground(Long... params) {
+            if (params.length == 0) {
+                return null;
+            }
+
+            return new TmdbApi().getMovieTrailer(params[0]);
+        }
+
+        protected void onPostExecute(String trailerId) {
+            Picasso.with(getActivity()).load(TmdbApi.generateTrailerThumbImageUrl(trailerId))
+                    .into(mTrailerView);
+        }
+    }
 }
