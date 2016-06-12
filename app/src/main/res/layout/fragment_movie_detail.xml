@@ -56,10 +56,13 @@
         android:layout_alignLeft="@+id/movie_summary"
         android:layout_alignStart="@+id/movie_summary" />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <com.google.android.youtube.player.YouTubeThumbnailView
         android:id="@+id/movie_trailer_thumbnail"
-        android:layout_below="@id/movie_summary"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/movie_summary"
+        android:scaleType="fitXY"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="10dp" />
 
 </RelativeLayout>

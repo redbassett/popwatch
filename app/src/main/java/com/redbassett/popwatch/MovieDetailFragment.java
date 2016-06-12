@@ -20,7 +20,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.redbassett.popwatch.MovieApi.TmdbApi;
 import com.redbassett.popwatch.data.PopwatchContract;
 import com.squareup.picasso.Picasso;
@@ -65,7 +69,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     private TextView mSummaryView;
     private TextView mReleaseDateView;
     private RatingBar mRatingView;
-    private ImageView mTrailerView;
+    private YouTubeThumbnailView mTrailerView;
 
     private MenuItem mActionFav;
 
@@ -83,7 +87,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         mSummaryView = (TextView) rootView.findViewById(R.id.movie_summary);
         mReleaseDateView = (TextView) rootView.findViewById(R.id.movie_release_date);
         mRatingView = (RatingBar) rootView.findViewById(R.id.movie_rating);
-        mTrailerView = (ImageView) rootView.findViewById(R.id.movie_trailer_thumbnail);
+        mTrailerView = (YouTubeThumbnailView) rootView.findViewById(R.id.movie_trailer_thumbnail);
 
         return rootView;
     }
@@ -213,7 +217,6 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
             String title = data.getString(Projection.COL_TITLE);
             mTitleView.setText(title);
 
-            mTrailerView.setImageResource(android.R.color.transparent);
             FetchTrailerTask trailerTask = new FetchTrailerTask();
             trailerTask.execute(data.getLong(Projection.COL_MOVIE_ID));
         }
@@ -223,7 +226,8 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     public void onLoaderReset(Loader<Cursor> loader) { }
 
     // Async class to load movie trailers
-    public class FetchTrailerTask extends AsyncTask<Long, Void, String> {
+    public class FetchTrailerTask extends AsyncTask<Long, Void, String>
+        implements YouTubeThumbnailView.OnInitializedListener {
         @Override
         protected String doInBackground(Long... params) {
             if (params.length == 0) {
@@ -234,8 +238,21 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         }
 
         protected void onPostExecute(String trailerId) {
-            Picasso.with(getActivity()).load(TmdbApi.generateTrailerThumbImageUrl(trailerId))
-                    .into(mTrailerView);
+            mTrailerView.setTag(trailerId);
+            mTrailerView.initialize(BuildConfig.YOUTUBE_DATA_API_KEY, this);
+        }
+
+        @Override
+        public void onInitializationSuccess(YouTubeThumbnailView view,
+                                            YouTubeThumbnailLoader loader) {
+            loader.setVideo((String) view.getTag());
+        }
+
+        @Override
+        public void onInitializationFailure(YouTubeThumbnailView view,
+                                            YouTubeInitializationResult error) {
+            final String errMsg = error.toString();
+            Toast.makeText(getContext(), errMsg, Toast.LENGTH_LONG).show();
         }
     }
 }
