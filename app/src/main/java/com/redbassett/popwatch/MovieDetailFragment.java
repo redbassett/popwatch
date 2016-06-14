@@ -246,6 +246,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
             return new TmdbApi().getMovieTrailer(params[0]);
         }
 
+        @Override
         protected void onPostExecute(String trailerId) {
             mTrailerView.setTag(trailerId);
             mTrailerView.initialize(BuildConfig.YOUTUBE_DATA_API_KEY, this);
