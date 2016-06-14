@@ -17,7 +17,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,6 +72,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     private TextView mReleaseDateView;
     private RatingBar mRatingView;
     private YouTubeThumbnailView mTrailerView;
+    private ListView mReviewsList;
 
     private MenuItem mActionFav;
 
@@ -88,6 +91,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         mReleaseDateView = (TextView) rootView.findViewById(R.id.movie_release_date);
         mRatingView = (RatingBar) rootView.findViewById(R.id.movie_rating);
         mTrailerView = (YouTubeThumbnailView) rootView.findViewById(R.id.movie_trailer_thumbnail);
+        mReviewsList = (ListView) rootView.findViewById(R.id.movie_review_list);
 
         return rootView;
     }
@@ -217,8 +221,14 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
             String title = data.getString(Projection.COL_TITLE);
             mTitleView.setText(title);
 
+            long movieId = data.getLong(Projection.COL_MOVIE_ID);
+
             FetchTrailerTask trailerTask = new FetchTrailerTask();
-            trailerTask.execute(data.getLong(Projection.COL_MOVIE_ID));
+            trailerTask.execute(movieId);
+
+            mReviewsList.setAdapter(null);
+            FetchReviewTask reviewTask = new FetchReviewTask();
+            reviewTask.execute(movieId);
         }
     }
 
@@ -230,9 +240,8 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         implements YouTubeThumbnailView.OnInitializedListener {
         @Override
         protected String doInBackground(Long... params) {
-            if (params.length == 0) {
+            if (params.length == 0)
                 return null;
-            }
 
             return new TmdbApi().getMovieTrailer(params[0]);
         }
@@ -253,6 +262,28 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
                                             YouTubeInitializationResult error) {
             final String errMsg = error.toString();
             Toast.makeText(getContext(), errMsg, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    // Async class to load movie reviews
+    public class FetchReviewTask extends AsyncTask<Long, Void, String[]> {
+        @Override
+        protected String[] doInBackground(Long... params) {
+            if (params.length == 0)
+                return null;
+
+            return new TmdbApi().getMovieReviews(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String[] reviews) {
+            if (reviews == null)
+                return;
+
+            ArrayAdapter<String> reviewAdapter = new ArrayAdapter<String>(getContext(),
+                    R.layout.listitem_review, reviews);
+
+            mReviewsList.setAdapter(reviewAdapter);
         }
     }
 }

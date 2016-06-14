@@ -28,9 +28,11 @@ public class TmdbApi extends MovieApi {
     private static final String TOP_URI = "top_rated";
     private static final String API_KEY_PARAM = "api_key";
     private static final String VIDEOS_URI = "videos";
+    private static final String REVIEWS_URI = "reviews";
 
     private static final String TMDB_RESULTS = "results";
     private static final String TMDB_VIDEO_KEY = "key";
+    private static final String TMDB_REVIEW_KEY = "content";
 
     private static final String TMDB_IMG_ROOT = "http://image.tmdb.org/t/p/";
     private static final String TMDB_IMG_SIZE_PATH = "w185";
@@ -94,6 +96,45 @@ public class TmdbApi extends MovieApi {
             if (len > 0) {
                 JSONObject firstVideo = videosJson.getJSONObject(0);
                 return firstVideo.getString(TMDB_VIDEO_KEY);
+            } else {
+                return null;
+            }
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
+            return null;
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    public String[] getMovieReviews(long id) {
+        try {
+            Uri builtUri = Uri.parse(BASE_URI).buildUpon()
+                    .appendPath(MOVIE_URI)
+                    .appendPath(String.valueOf(id))
+                    .appendPath(REVIEWS_URI)
+                    .appendQueryParameter(API_KEY_PARAM, BuildConfig.THE_MOVIE_DATABASE_API_KEY)
+                    .build();
+
+            URL url = new URL(builtUri.toString());
+
+            String jsonStr = this.getJSONFromUrl(url);
+
+            JSONObject resultJson = new JSONObject(jsonStr);
+            JSONArray reviewsJson = resultJson.getJSONArray(TMDB_RESULTS);
+            int len = reviewsJson.length();
+
+            String[] returnStrings = new String[len];
+
+            if (len > 0) {
+                for (int i = 0; i < len; i++) {
+                    JSONObject review = reviewsJson.getJSONObject(i);
+                    returnStrings[i] = review.getString(TMDB_REVIEW_KEY);
+                }
+
+                return returnStrings;
             } else {
                 return null;
             }
