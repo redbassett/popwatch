@@ -281,7 +281,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
                 return;
 
             ArrayAdapter<String> reviewAdapter = new ArrayAdapter<String>(getContext(),
-                    R.layout.listitem_review, reviews);
+                    R.layout.list_item_review, reviews);
 
             mReviewsList.setAdapter(reviewAdapter);
         }
