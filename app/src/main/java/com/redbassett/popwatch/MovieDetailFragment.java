@@ -100,9 +100,6 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         mTrailerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mTrailerLoader != null)
-                    mTrailerLoader.release();
-
                 Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(),
                         BuildConfig.YOUTUBE_DATA_API_KEY, (String) v.getTag());
                 startActivity(intent);
@@ -114,10 +111,12 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-
-        if (mTrailerLoader != null)
+        if (mTrailerLoader != null) {
             mTrailerLoader.release();
+            mTrailerLoader = null;
+        }
+        
+        super.onDestroy();
     }
 
     @Override
