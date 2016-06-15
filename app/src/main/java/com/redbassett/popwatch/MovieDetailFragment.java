@@ -77,6 +77,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     private ListView mReviewsList;
 
     private YouTubeThumbnailLoader mTrailerLoader;
+    private boolean fLoading; // Flag to prevent multiple initializations
 
     private MenuItem mActionFav;
 
@@ -115,7 +116,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
             mTrailerLoader.release();
             mTrailerLoader = null;
         }
-        
+
         super.onDestroy();
     }
 
@@ -272,15 +273,20 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
 
         @Override
         protected void onPostExecute(String trailerId) {
-            mTrailerView.setTag(trailerId);
-            mTrailerView.initialize(BuildConfig.YOUTUBE_DATA_API_KEY, this);
+            // Check that we don't already have a loader and that we aren't in the middle of
+            // initializing a new one
+            if (mTrailerLoader == null && !fLoading) {
+                fLoading = true;
+                mTrailerView.setTag(trailerId);
+                mTrailerView.initialize(BuildConfig.YOUTUBE_DATA_API_KEY, this);
+            }
         }
 
         @Override
         public void onInitializationSuccess(YouTubeThumbnailView view,
                                             YouTubeThumbnailLoader loader) {
-            loader.setVideo((String) view.getTag());
             mTrailerLoader = loader;
+            loader.setVideo((String) view.getTag());
         }
 
         @Override
