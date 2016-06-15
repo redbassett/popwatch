@@ -1,6 +1,7 @@
 package com.redbassett.popwatch;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.redbassett.popwatch.MovieApi.TmdbApi;
@@ -74,6 +76,8 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     private YouTubeThumbnailView mTrailerView;
     private ListView mReviewsList;
 
+    private YouTubeThumbnailLoader mTrailerLoader;
+
     private MenuItem mActionFav;
 
 
@@ -93,7 +97,27 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         mTrailerView = (YouTubeThumbnailView) rootView.findViewById(R.id.movie_trailer_thumbnail);
         mReviewsList = (ListView) rootView.findViewById(R.id.movie_review_list);
 
+        mTrailerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mTrailerLoader != null)
+                    mTrailerLoader.release();
+
+                Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(),
+                        BuildConfig.YOUTUBE_DATA_API_KEY, (String) v.getTag());
+                startActivity(intent);
+            }
+        });
+
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (mTrailerLoader != null)
+            mTrailerLoader.release();
     }
 
     @Override
@@ -238,6 +262,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     // Async class to load movie trailers
     public class FetchTrailerTask extends AsyncTask<Long, Void, String>
         implements YouTubeThumbnailView.OnInitializedListener {
+
         @Override
         protected String doInBackground(Long... params) {
             if (params.length == 0)
@@ -256,6 +281,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         public void onInitializationSuccess(YouTubeThumbnailView view,
                                             YouTubeThumbnailLoader loader) {
             loader.setVideo((String) view.getTag());
+            mTrailerLoader = loader;
         }
 
         @Override
