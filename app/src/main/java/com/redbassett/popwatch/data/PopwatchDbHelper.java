@@ -17,8 +17,7 @@ public class PopwatchDbHelper extends SQLiteOpenHelper {
                 MovieEntry.COLUMN_NAME_POSTER_PATH + " TEXT," +
                 MovieEntry.COLUMN_NAME_SUMMARY + " TEXT," +
                 MovieEntry.COLUMN_NAME_RELEASE_DATE + " DATE," +
-                MovieEntry.COLUMN_NAME_RATING + " REAL," +
-                MovieEntry.COLUMN_NAME_TRAILER_URL + " TEXT" +
+                MovieEntry.COLUMN_NAME_RATING + " REAL" +
                 " )";
     }
 

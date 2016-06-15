@@ -39,9 +39,6 @@ public final class PopwatchContract {
         // This is called the "vote_average" in TMDB API
         public static final String COLUMN_NAME_RATING = "rating";
 
-        // Trailer url, stored as a string
-        public static final String COLUMN_NAME_TRAILER_URL = "trailer_url";
-
         // The movie content uri
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(MOVIE_PATH).build();
