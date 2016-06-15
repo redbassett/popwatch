@@ -66,7 +66,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         public static final int COL_TITLE = 6;
     }
 
-    private Cursor mCursor;
+    private ContentValues mMovieRow;
 
     private ImageView mPosterView;
     private TextView mTitleView;
@@ -87,6 +87,8 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         if (arguments != null) {
             mUri = arguments.getParcelable(MovieDetailFragment.DETAIL_URI);
         }
+
+        mMovieRow = new ContentValues();
 
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         mPosterView = (ImageView) rootView.findViewById(R.id.movie_poster_image);
@@ -135,7 +137,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.movie_detail_fragment, menu);
         mActionFav = menu.findItem(R.id.action_fav);
-        if (mCursor != null)
+        if (mMovieRow != null)
             updateFavIcon(isFavorited());
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -152,7 +154,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     }
 
     private boolean isFavorited() {
-        long currentId = mCursor.getLong(MovieListFragment.Projection.COL_MOVIE_ID);
+        long currentId = mMovieRow.getAsLong(Projection.DETAIL_COLUMNS[Projection.COL_MOVIE_ID]);
 
         Cursor result = getContext().getContentResolver().query(
                 PopwatchContract.FavMovieEntry.CONTENT_URI,
@@ -166,7 +168,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     }
 
     private boolean toggleFavorite() {
-        long currentId = mCursor.getLong(MovieListFragment.Projection.COL_MOVIE_ID);
+        long currentId = mMovieRow.getAsLong(Projection.DETAIL_COLUMNS[Projection.COL_MOVIE_ID]);
         boolean faved = isFavorited();
 
         if (faved) {
@@ -182,8 +184,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
                         "Attempted to unfavorite movie not found in favorites " +
                         String.valueOf(currentId));
         } else {
-            ContentValues vals = new ContentValues();
-            DatabaseUtils.cursorRowToContentValues(mCursor, vals);
+            ContentValues vals = mMovieRow;
 
             getContext().getContentResolver().insert(
                     PopwatchContract.FavMovieEntry.CONTENT_URI,
@@ -219,7 +220,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
-            mCursor = data;
+            DatabaseUtils.cursorRowToContentValues(data, mMovieRow);
 
             if (mActionFav != null)
                 updateFavIcon(isFavorited());
