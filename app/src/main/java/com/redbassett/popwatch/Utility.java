@@ -33,5 +33,7 @@ public class Utility {
         public static final String CONTENT_AUTHORITY = PopwatchContract.CONTENT_AUTHORITY;
 
         public static final String SYNC_ACCOUNT_TYPE = "popwatch.redbassett.com";
+
+        public static final String YOUTUBE_VIDEO_ROOT = "http://youtube.com/watch?v=";
     }
 }

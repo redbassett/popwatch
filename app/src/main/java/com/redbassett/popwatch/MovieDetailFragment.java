@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -79,6 +81,8 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
 
     private MenuItem mActionFav;
 
+    private ShareActionProvider mShareActionProvider;
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -136,6 +140,11 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         mActionFav = menu.findItem(R.id.action_fav);
         if (mCursor != null)
             updateFavIcon(isFavorited());
+
+        MenuItem shareItem = menu.findItem(R.id.action_share);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+        setShareIntent();
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -148,6 +157,28 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setShareIntent() {
+        if (mShareActionProvider != null && mCursor != null) {
+            String shareText;
+
+            if (mTrailerView.getTag() != null) {
+                shareText = String.format(getString(R.string.share_text_video),
+                        mCursor.getString(Projection.COL_TITLE),
+                        Utility.C.YOUTUBE_VIDEO_ROOT + mTrailerView.getTag());
+            } else {
+                shareText = String.format(getString(R.string.share_text_no_video),
+                        mCursor.getString(Projection.COL_TITLE));
+            }
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     private boolean isFavorited() {
@@ -251,6 +282,9 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
             mReviewsList.setAdapter(null);
             FetchReviewTask reviewTask = new FetchReviewTask();
             reviewTask.execute(movieId);
+
+            // Refresh share intent
+            setShareIntent();
         }
     }
 
@@ -277,6 +311,9 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
                 fLoading = true;
                 mTrailerView.setTag(trailerId);
                 mTrailerView.initialize(BuildConfig.YOUTUBE_DATA_API_KEY, this);
+
+                // Refresh share intent with trailer URL
+                setShareIntent();
             }
         }
 

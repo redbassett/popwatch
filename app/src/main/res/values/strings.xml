@@ -32,4 +32,9 @@
     <!-- Constants needed in XML, not translateable UI strings -->
     <string name="content_authority" translatable="false">com.redbassett.popwatch</string>
     <string name="sync_account_type" translatable="false">popwatch.redbassett.com</string>
+
+    <!-- Share action -->
+    <string name="action_share">Share</string>
+    <string name="share_text_video">Check out this trailer for %1$s: %2$s</string>
+    <string name="share_text_no_video">Check out %1$s on PopWatch!</string>
 </resources>

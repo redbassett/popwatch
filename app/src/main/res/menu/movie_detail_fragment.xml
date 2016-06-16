@@ -5,4 +5,8 @@
         android:icon="@drawable/ic_star_border_white_24px"
         android:title="@string/action_fav_title"
         popwatch:showAsAction="always" />
+    <item android:id="@+id/action_share"
+        android:title="@string/action_share"
+        popwatch:showAsAction="always"
+        popwatch:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
 </menu>
