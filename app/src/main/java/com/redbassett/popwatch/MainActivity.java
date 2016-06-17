@@ -41,19 +41,6 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            /** In preparation for a release, this menu should not be shown to the user.
-                This code is not removed as it will be used in later development (and this app
-                hasn't implemented feature flags yet).
-            case R.id.action_refresh:
-                updateMovieFeed();
-                return true; **/
-            /** Settings removed until other options are added
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true; **/
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
