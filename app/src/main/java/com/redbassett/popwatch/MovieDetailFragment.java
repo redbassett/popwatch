@@ -27,6 +27,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeApiServiceUtil;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
@@ -276,8 +277,14 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
 
             long movieId = data.getLong(Projection.COL_MOVIE_ID);
 
-            FetchTrailerTask trailerTask = new FetchTrailerTask();
-            trailerTask.execute(movieId);
+            if (YouTubeApiServiceUtil.isYouTubeApiServiceAvailable(getContext()) ==
+                    YouTubeInitializationResult.SUCCESS) {
+                FetchTrailerTask trailerTask = new FetchTrailerTask();
+                trailerTask.execute(movieId);
+            } else {
+                Toast.makeText(getContext(), "Please install the YouTube app to see trailers.",
+                        Toast.LENGTH_LONG).show();
+            }
 
             mReviewsList.setAdapter(null);
             FetchReviewTask reviewTask = new FetchReviewTask();
