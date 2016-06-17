@@ -134,9 +134,6 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
                 updateMovieFeed();
                 return true;
             }
-            case R.id.action_refresh:
-                updateMovieFeed();
-                return true;
         }
 
         return super.onOptionsItemSelected(item);

@@ -14,7 +14,4 @@
                 android:title="@string/pref_sort_fav_label" />
         </menu>
     </item>
-    <item android:id="@+id/action_refresh"
-        android:title="@string/action_refresh"
-        popwatch:showAsAction="always" />
 </menu>
