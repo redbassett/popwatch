@@ -24,7 +24,7 @@ public class Movie {
 
     protected static final String TMDB_ID = "id";
     protected static final String TMDB_POSTER_PATH = "poster_path";
-    protected static final String TMDB_TITLE = "original_title";
+    protected static final String TMDB_TITLE = "title";
     protected static final String TMDB_SUMMARY = "overview";
     protected static final String TMDB_RATING = "vote_average";
     protected static final String TMDB_RELEASE_DATE = "release_date";
