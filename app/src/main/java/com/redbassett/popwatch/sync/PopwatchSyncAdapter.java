@@ -87,6 +87,7 @@ public class PopwatchSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 DateFormat sqlDateFormat = SimpleDateFormat.getDateInstance();
 
+                vals.put(MovieEntry._ID, topMovies[i].getId());
                 vals.put(MovieEntry.COLUMN_NAME_TITLE, topMovies[i].getTitle());
                 vals.put(MovieEntry.COLUMN_NAME_POSTER_PATH, topMovies[i].getPosterUrl());
                 vals.put(MovieEntry.COLUMN_NAME_RATING, topMovies[i].getRating());
