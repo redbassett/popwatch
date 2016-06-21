@@ -140,7 +140,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         inflater.inflate(R.menu.movie_detail_fragment, menu);
         mActionFav = menu.findItem(R.id.action_fav);
         if (mCursor != null)
-            updateFavIcon(isFavorited());
+            new FetchFavoriteStatusTask().execute();
 
         MenuItem shareItem = menu.findItem(R.id.action_share);
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
@@ -153,7 +153,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_fav:
-                toggleFavorite();
+                new ToggleFavoriteStatusTask().execute();
                 return true;
         }
 
@@ -182,56 +182,6 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         }
     }
 
-    private boolean isFavorited() {
-        long currentId = mCursor.getLong(MovieListFragment.Projection.COL_MOVIE_ID);
-
-        Cursor result = getContext().getContentResolver().query(
-                PopwatchContract.FavMovieEntry.CONTENT_URI,
-                Projection.DETAIL_COLUMNS,
-                "_ID = ?",
-                new String[]{String.valueOf(currentId)},
-                null
-        );
-
-        return result.moveToFirst();
-    }
-
-    private boolean toggleFavorite() {
-        long currentId = mCursor.getLong(MovieListFragment.Projection.COL_MOVIE_ID);
-        boolean faved = isFavorited();
-
-        if (faved) {
-            if (getContext().getContentResolver().delete(
-                    PopwatchContract.FavMovieEntry.CONTENT_URI,
-                    "_ID = ?",
-                    new String[]{String.valueOf(currentId)}
-            ) == 1) {
-                updateFavIcon(false);
-                return false;
-            } else
-                throw new android.database.SQLException(
-                        "Attempted to unfavorite movie not found in favorites " +
-                        String.valueOf(currentId));
-        } else {
-            ContentValues vals = new ContentValues();
-            DatabaseUtils.cursorRowToContentValues(mCursor, vals);
-
-            getContext().getContentResolver().insert(
-                    PopwatchContract.FavMovieEntry.CONTENT_URI,
-                    vals
-            );
-
-            updateFavIcon(true);
-            return true;
-        }
-
-    }
-
-    private void updateFavIcon(boolean faved) {
-        mActionFav.setIcon((faved) ?
-                R.drawable.ic_star_white_24px : R.drawable.ic_star_border_white_24px);
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (mUri != null) {
@@ -253,7 +203,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
             mCursor = data;
 
             if (mActionFav != null)
-                updateFavIcon(isFavorited());
+               new FetchFavoriteStatusTask().execute();
 
             String posterPath = data.getString(Projection.COL_POSTER_PATH);
             Picasso.with(getActivity()).load(TmdbApi.generatePosterImageUrl(posterPath)).into(mPosterView);
@@ -358,6 +308,71 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
                     R.layout.list_item_review, reviews);
 
             mReviewsList.setAdapter(reviewAdapter);
+        }
+    }
+
+    // Async classes to get and set favorite movies
+    public abstract class FavoriteStatusTask extends AsyncTask<Void, Void, Boolean> {
+        protected boolean getFavoriteStatus() {
+            long currentId = mCursor.getLong(MovieListFragment.Projection.COL_MOVIE_ID);
+
+            Cursor result = getContext().getContentResolver().query(
+                    PopwatchContract.FavMovieEntry.CONTENT_URI,
+                    Projection.DETAIL_COLUMNS,
+                    "_ID = ?",
+                    new String[]{String.valueOf(currentId)},
+                    null
+            );
+
+            return result.moveToFirst();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean faved) {
+            updateFavIcon(faved);
+        }
+
+        protected void updateFavIcon(boolean faved) {
+            mActionFav.setIcon((faved) ?
+                    R.drawable.ic_star_white_24px : R.drawable.ic_star_border_white_24px);
+        }
+    }
+
+    public class FetchFavoriteStatusTask extends FavoriteStatusTask {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return getFavoriteStatus();
+        }
+    }
+
+    public class ToggleFavoriteStatusTask extends FavoriteStatusTask {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            long currentId = mCursor.getLong(MovieListFragment.Projection.COL_MOVIE_ID);
+            boolean faved = getFavoriteStatus();
+
+            if (faved) {
+                if (getContext().getContentResolver().delete(
+                        PopwatchContract.FavMovieEntry.CONTENT_URI,
+                        "_ID = ?",
+                        new String[]{String.valueOf(currentId)}
+                ) == 1) {
+                    return false;
+                } else
+                    throw new android.database.SQLException(
+                            "Attempted to unfavorite movie not found in favorites " +
+                                    String.valueOf(currentId));
+            } else {
+                ContentValues vals = new ContentValues();
+                DatabaseUtils.cursorRowToContentValues(mCursor, vals);
+
+                getContext().getContentResolver().insert(
+                        PopwatchContract.FavMovieEntry.CONTENT_URI,
+                        vals
+                );
+
+                return true;
+            }
         }
     }
 }
