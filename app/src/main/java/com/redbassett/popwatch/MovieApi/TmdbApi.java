@@ -86,6 +86,9 @@ public class TmdbApi extends MovieApi {
 
             String jsonStr = this.getJSONFromUrl(url);
 
+            if (jsonStr == null)
+                return null;
+
             JSONObject resultJson = new JSONObject(jsonStr);
             JSONArray videosJson = resultJson.getJSONArray(TMDB_RESULTS);
             int len = videosJson.length();
@@ -118,6 +121,9 @@ public class TmdbApi extends MovieApi {
             URL url = new URL(builtUri.toString());
 
             String jsonStr = this.getJSONFromUrl(url);
+
+            if (jsonStr == null)
+                return null;
 
             JSONObject resultJson = new JSONObject(jsonStr);
             JSONArray reviewsJson = resultJson.getJSONArray(TMDB_RESULTS);
