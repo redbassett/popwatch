@@ -65,20 +65,37 @@
                 android:layout_alignStart="@+id/movie_summary" />
         </RelativeLayout>
 
-        <com.google.android.youtube.player.YouTubeThumbnailView
-            android:id="@+id/movie_trailer_thumbnail"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/movie_trailers"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/movie_detail_wrapper"
-            android:scaleType="fitXY"
-            android:layout_centerHorizontal="true"
-            android:paddingTop="10dp" />
+            android:layout_below="@id/movie_detail_wrapper">
+
+            <com.google.android.youtube.player.YouTubeThumbnailView
+                android:id="@+id/movie_trailer_thumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="10dp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/movie_trailer_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:layout_centerHorizontal="true"
+                android:text="@string/trailer_button"
+                android:visibility="gone" />
+
+        </RelativeLayout>
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/movie_review_list"
-            android:layout_below="@id/movie_trailer_thumbnail"/>
+            android:layout_below="@id/movie_trailers"/>
 
     </RelativeLayout>
 </ScrollView>

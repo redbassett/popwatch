@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -44,6 +45,8 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     private static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
     static final String DETAIL_URI = "URI";
+
+    private static final String YOUTUBE_VIDEO_ROOT = "http://youtube.com/watch?v=";
 
     private Uri mUri;
 
@@ -79,6 +82,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
 
     private YouTubeThumbnailLoader mTrailerLoader;
     private boolean fLoading; // Flag to prevent multiple initializations
+    private Button mTrailerButton;
 
     private MenuItem mActionFav;
 
@@ -99,6 +103,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         mReleaseDateView = (TextView) rootView.findViewById(R.id.movie_release_date);
         mRatingView = (RatingBar) rootView.findViewById(R.id.movie_rating);
         mTrailerView = (YouTubeThumbnailView) rootView.findViewById(R.id.movie_trailer_thumbnail);
+        mTrailerButton = (Button) rootView.findViewById(R.id.movie_trailer_button);
         mReviewsList = (ListView) rootView.findViewById(R.id.movie_review_list);
 
         mTrailerView.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +111,15 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
             public void onClick(View v) {
                 Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(),
                         BuildConfig.YOUTUBE_DATA_API_KEY, (String) v.getTag());
+                startActivity(intent);
+            }
+        });
+
+        mTrailerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(YOUTUBE_VIDEO_ROOT + mTrailerButton.getTag()));
                 startActivity(intent);
             }
         });
@@ -182,6 +196,11 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         }
     }
 
+    private boolean youTubeApiAvailable() {
+        return (YouTubeApiServiceUtil.isYouTubeApiServiceAvailable(getContext()) ==
+                YouTubeInitializationResult.SUCCESS);
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (mUri != null) {
@@ -227,14 +246,8 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
 
             long movieId = data.getLong(Projection.COL_MOVIE_ID);
 
-            if (YouTubeApiServiceUtil.isYouTubeApiServiceAvailable(getContext()) ==
-                    YouTubeInitializationResult.SUCCESS) {
-                FetchTrailerTask trailerTask = new FetchTrailerTask();
-                trailerTask.execute(movieId);
-            } else {
-                Toast.makeText(getContext(), "Please install the YouTube app to see trailers.",
-                        Toast.LENGTH_LONG).show();
-            }
+            FetchTrailerTask trailerTask = new FetchTrailerTask();
+            trailerTask.execute(movieId);
 
             mReviewsList.setAdapter(null);
             FetchReviewTask reviewTask = new FetchReviewTask();
@@ -266,8 +279,13 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
             // initializing a new one
             if (mTrailerLoader == null && !fLoading) {
                 fLoading = true;
-                mTrailerView.setTag(trailerId);
-                mTrailerView.initialize(BuildConfig.YOUTUBE_DATA_API_KEY, this);
+                if (youTubeApiAvailable()) {
+                    mTrailerView.setTag(trailerId);
+                    mTrailerView.initialize(BuildConfig.YOUTUBE_DATA_API_KEY, this);
+                } else {
+                    mTrailerButton.setTag(trailerId);
+                    mTrailerButton.setVisibility(View.VISIBLE);
+                }
 
                 // Refresh share intent with trailer URL
                 setShareIntent();
@@ -279,6 +297,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
                                             YouTubeThumbnailLoader loader) {
             mTrailerLoader = loader;
             loader.setVideo((String) view.getTag());
+            mTrailerView.setVisibility(View.VISIBLE);
         }
 
         @Override

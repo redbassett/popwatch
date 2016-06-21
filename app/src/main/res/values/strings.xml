@@ -28,6 +28,7 @@
 
     <!-- Movie details -->
     <string name="movie_detail_label">Movie Details</string>
+    <string name="trailer_button">Watch Trailer</string>
 
     <!-- Constants needed in XML, not translateable UI strings -->
     <string name="content_authority" translatable="false">com.redbassett.popwatch</string>
